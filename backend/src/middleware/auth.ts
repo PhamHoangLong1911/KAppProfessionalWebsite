@@ -17,6 +17,10 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
       token = req.headers.authorization.split(' ')[1];
     }
 
+    // Debug logging
+    console.log('Auth Debug - Headers:', req.headers.authorization);
+    console.log('Auth Debug - Token:', token ? 'Token exists' : 'No token');
+
     // Check if token exists
     if (!token) {
       return res.status(401).json({
@@ -26,13 +30,20 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
     }
 
     try {
+      // Debug logging
+      console.log('Auth Debug - JWT_SECRET exists:', !!process.env.JWT_SECRET);
+      console.log('Auth Debug - Token length:', token.length);
+      
       // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string };
+      console.log('Auth Debug - Token decoded successfully, user ID:', decoded.id);
       
       // Get user from token
       const user = await User.findById(decoded.id).select('-password');
+      console.log('Auth Debug - User found:', !!user);
       
       if (!user) {
+        console.log('Auth Debug - User not found in database');
         return res.status(401).json({
           success: false,
           message: 'Token is not valid'
@@ -40,6 +51,7 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
       }
 
       if (!user.isActive) {
+        console.log('Auth Debug - User account deactivated');
         return res.status(401).json({
           success: false,
           message: 'Account has been deactivated'
@@ -47,8 +59,10 @@ export const protect = async (req: AuthRequest, res: Response, next: NextFunctio
       }
 
       req.user = user;
+      console.log('Auth Debug - Successfully authenticated user:', user.email);
       next();
     } catch (error) {
+      console.log('Auth Debug - JWT verification failed:', error instanceof Error ? error.message : 'Unknown error');
       return res.status(401).json({
         success: false,
         message: 'Token is not valid'
