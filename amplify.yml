@@ -1,0 +1,20 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - cd frontend
+            - echo "Installing dependencies with legacy peer deps..."
+            - npm install --legacy-peer-deps --no-audit --no-fund
+        build:
+          commands:
+            - echo "Building the React application..."
+            - npm run build
+      artifacts:
+        baseDirectory: frontend/build
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - frontend/node_modules/**/*

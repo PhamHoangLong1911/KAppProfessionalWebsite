@@ -1,0 +1,18 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Installing dependencies with legacy peer deps support for React 19..."
+        - npm ci --legacy-peer-deps --no-audit --no-fund
+    build:
+      commands:
+        - echo "Building React 19 application..."
+        - npm run build
+  artifacts:
+    baseDirectory: build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
