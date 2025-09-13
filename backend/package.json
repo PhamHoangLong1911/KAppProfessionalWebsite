@@ -2,19 +2,18 @@
   "name": "kapptech-cms-backend",
   "version": "1.0.0",
   "description": "Backend API for KAppTech CMS website",
-  "main": "lambda.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "node dist/server.js",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "ts-node index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only index.ts",
+    "dev:server": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
-    "build:lambda": "tsc && cp package.json dist/ && cd dist && npm install --production",
     "test": "jest",
     "seed": "ts-node src/utils/seedData.ts",
     "lint": "eslint src/**/*.{js,ts}",
     "lint:fix": "eslint src/**/*.{js,ts} --fix",
     "format": "prettier --write src/**/*.{js,ts,json}",
     "type-check": "tsc --noEmit",
-    "test:lambda": "node -e \"require('./dist/lambda').handler({httpMethod:'GET',path:'/health',headers:{},body:null}, {}, console.log)\""
   },
   "dependencies": {
     "@eslint/js": "^9.35.0",

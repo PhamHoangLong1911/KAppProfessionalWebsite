@@ -23,6 +23,7 @@
   },
   "include": [
     "src/**/*",
+    "index.ts",
     "lambda.ts"
   ],
   "exclude": [
